@@ -1,0 +1,16 @@
+---
+- name: Get Clock Time from AsterNOS Switch
+  hosts: astonos_switches
+  gather_facts: no
+
+  tasks:
+    - name: Execute 'show clock' command using RAW SSH
+      # This line is crucial: Must be two spaces of indentation relative to '- name:' above it.
+      ansible.builtin.raw: "show clock"
+        # This line must be indented exactly four spaces relative to the line above it.
+
+      register: clock_output
+
+    - name: Display the clock time
+      ansible.builtin.debug:
+        msg: "The clock on {{ inventory_hostname }} is: {{ clock_output.stdout | trim }}"
