@@ -1,14 +1,23 @@
+---
 - name: Configure VLAN on AsterNOS
   hosts: astronos_switches
   gather_facts: no
   connection: network_cli
+
   vars:
     vlan_id: 1000
     vlan_name: Finance
+
   tasks:
-    - name: Configure VLAN
+    - name: Apply VLAN Configuration and Save
+      # CRITICAL CHANGE: Use 'config' instead of 'lines'
       ansible.netcommon.cli_config:
-        lines:
-          - configure terminal
-          - vlan {{ vlan_id }}
-          - description {{ vlan_name }}
+        config: |
+          configure terminal
+          vlan {{ vlan_id }}
+          description {{ vlan_name }}
+          exit
+          end
+        
+        # Save the configuration
+        save_when: always
