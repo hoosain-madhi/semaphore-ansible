@@ -1,16 +1,9 @@
----
-- name: Create VLAN on AsterNOS switches
-  hosts: astonos_switches
-  gather_facts: no
-
-  tasks:
-    - name: Enter CLI and Apply VLAN Configuration
-      # CRITICAL CHANGE: Replace 'ENTRY_CMD' with the correct command (e.g., 'cli' or 'vtysh')
-      # We chain the ENTRY_CMD with the configuration lines using semicolons (;)
+- name: Enter CLI and Apply VLAN Configuration
+      # Replace 'aster-cli' with the actual command you discovered!
       ansible.builtin.raw: |
-        ENTRY_CMD
-        configure terminal;
-        vlan 1000;
-        description Test;
-        end;
-        write memory  # Assuming this is the save command
+        aster-cli
+        configure terminal
+        vlan 1000
+        description Test
+        end
+        write memory
