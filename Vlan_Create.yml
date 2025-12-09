@@ -9,5 +9,6 @@
     - name: Configure VLAN
       ansible.netcommon.cli_config:
         lines:
+          - configure terminal
           - vlan {{ vlan_id }}
           - description {{ vlan_name }}
