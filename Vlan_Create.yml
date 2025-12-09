@@ -1,16 +1,16 @@
 ---
-- name: Create VLAN on AsterNOS switches
+- name: Create VLAN on AsterNOS switches (Final RAW Fix)
   hosts: astonos_switches
   gather_facts: no
 
   tasks:
-    - name: Enter CLI and Apply VLAN Configuration
-      # The key 'ansible.builtin.raw:' is at 4 spaces
-      ansible.builtin.raw: |
-        # All lines below the '|' must be indented (e.g., 6 spaces total)
-        ENTRY_CMD
-        configure terminal
-        vlan 1000
-        description Test
-        end
-       # write memory
+    - name: Apply VLAN Configuration in Single Line
+      # We chain all commands with a semicolon (;) on a single line.
+      # This bypasses multi-line script issues and ensures command execution order.
+      ansible.builtin.raw: "configure terminal; vlan 1000; description Test; end"
+      register: vlan_task
+      # Add a simple check to see the output
+    
+    - name: Display Configuration Output
+      ansible.builtin.debug:
+        msg: "VLAN Configuration applied. Output: {{ vlan_task.stdout }}"
