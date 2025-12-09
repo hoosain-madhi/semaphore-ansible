@@ -1,0 +1,14 @@
+- name: Create VLAN on AsterNOS switches
+  hosts: astonos_switches
+  gather_facts: no
+
+  tasks:
+    - name: Create VLAN
+      ansible.builtin.raw: |
+        configure terminal
+        vlan 1000
+        description Test
+        end
+
+    # - name: Save config
+     # ansible.builtin.raw: write memory
