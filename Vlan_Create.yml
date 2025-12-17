@@ -1,6 +1,6 @@
 ---
 - name: Configure VLAN on AsterNOS
-  hosts: astronos_switches # Assuming you corrected the spelling here
+  hosts: asterfusion_switches # Assuming you corrected the spelling here
   gather_facts: no
   connection: network_cli
 
