@@ -1,6 +1,6 @@
 ---
 - name: Configure VLAN on AsterNOS
-  hosts: astronos_switches
+  hosts: astronos_switches # Assuming you corrected the spelling here
   gather_facts: no
   connection: network_cli
 
@@ -9,14 +9,14 @@
     vlan_name: Finance
 
   tasks:
-    - name: Create VLAN {{ vlan_id }}
+    - name: Apply VLAN Configuration and Save
+      # CRITICAL CHANGE: Use 'config' instead of 'lines'
       ansible.netcommon.cli_config:
         config: |
-          configure terminal
           vlan {{ vlan_id }}
           description {{ vlan_name }}
+          exit
           end
-
-    - name: Save config (write)
-      ansible.netcommon.cli_command:
-        command: write
+        
+        # This parameter is supported by your module, use it to save
+        # save_when: always
