@@ -13,7 +13,6 @@
       # CRITICAL CHANGE: Use 'config' instead of 'lines'
       ansible.netcommon.cli_config:
         config: |
-          configure terminal
           vlan {{ vlan_id }}
           description {{ vlan_name }}
           exit
