@@ -11,12 +11,12 @@
   tasks:
     - name: Create VLAN {{ vlan_id }}
       ansible.netcommon.cli_config:
-        lines:
-          - vlan {{ vlan_id }}
-          - description {{ vlan_name }}
-        parents: []
-        save_when: never
+        config: |
+          configure terminal
+          vlan {{ vlan_id }}
+          description {{ vlan_name }}
+          end
 
-    - name: Save configuration
+    - name: Save config (write)
       ansible.netcommon.cli_command:
         command: write
