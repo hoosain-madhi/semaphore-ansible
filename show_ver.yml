@@ -1,6 +1,6 @@
 ---
 - name: Get Clock Time from AsterNOS Switch
-  hosts: astonos_switches
+  hosts: asterfusion_switches
   gather_facts: no
 
   tasks:
