@@ -1,16 +1,18 @@
 ---
-- name: Get Clock Time from AsterNOS Switch
+- name: Show version from AsterNOS Switch
   hosts: asterfusion_switches
   gather_facts: no
 
   tasks:
-    - name: Execute 'show ver' command using RAW SSH
-      # This line is crucial: Must be two spaces of indentation relative to '- name:' above it.
-      ansible.builtin.raw: "show ver"
-        # This line must be indented exactly four spaces relative to the line above it.
-
+    - name: Run show version in sonic-cli
+      ansible.builtin.raw: |
+        sonic-cli <<'EOF'
+        show version
+        EOF
       register: ver_output
+      changed_when: false
+      failed_when: false
 
-    - name: Display the clock time
+    - name: Display show version output
       ansible.builtin.debug:
-        msg: "The ver on {{ inventory_hostname }} is: {{ ver_output.stdout | trim }}"
+        msg: "{{ ver_output.stdout | default('NO OUTPUT (command failed or returned nothing)') | trim }}"
