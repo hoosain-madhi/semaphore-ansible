@@ -1,17 +1,30 @@
 ---
-- name: Show version from AsterNOS Switch (handles RETURN prompt)
+- name: Backup AsterNOS running configuration (config_db.json)
   hosts: asterfusion_switches
   gather_facts: no
 
+  vars:
+    backup_dir: "/tmp/asternos_backups"
+
   tasks:
-    - name: Show version (send RETURN to continue)
-      ansible.builtin.raw: |
-        timeout 20 sh -lc "printf '\nshow version\n\nexit\n' | sonic-cli"
-      register: ver_output
+    - name: Ensure backup directory exists (controller)
+      ansible.builtin.file:
+        path: "{{ backup_dir }}"
+        state: directory
+        mode: "0755"
+
+    - name: Fetch config_db.json from switch
+      ansible.builtin.raw: "cat /etc/sonic/config_db.json"
+      register: cfg
       changed_when: false
-      failed_when: false
       check_mode: false
 
-    - name: Display show version output
+    - name: Save config_db.json locally
+      ansible.builtin.copy:
+        content: "{{ cfg.stdout }}"
+        dest: "{{ backup_dir }}/{{ inventory_hostname }}-config_db.json"
+        mode: "0644"
+
+    - name: Confirm
       ansible.builtin.debug:
-        msg: "{{ ver_output.stdout | default('NO OUTPUT') }}"
+        msg: "Saved running config to {{ backup_dir }}/{{ inventory_hostname }}-config_db.json"
