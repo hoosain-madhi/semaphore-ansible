@@ -4,13 +4,14 @@
   gather_facts: no
 
   tasks:
-    - name: Execute 'show clock' command using RAW SSH
-      # This line is crucial: Must be two spaces of indentation relative to '- name:' above it.
-      ansible.builtin.raw: "show clock"
-        # This line must be indented exactly four spaces relative to the line above it.
-
+    - name: Get clock (sonic-cli, non-interactive)
+      ansible.builtin.raw: |
+        timeout 20 sh -lc "(echo 'show clock'; yes '' | head -n 10; echo 'exit') | sonic-cli"
       register: clock_output
+      changed_when: false
+      failed_when: false
+      check_mode: false
 
-    - name: Display the clock time
+    - name: Display the clock output
       ansible.builtin.debug:
-        msg: "The clock on {{ inventory_hostname }} is: {{ clock_output.stdout | trim }}"
+        msg: "{{ clock_output.stdout | default('NO OUTPUT') | trim }}"
