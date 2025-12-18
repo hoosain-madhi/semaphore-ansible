@@ -1,0 +1,16 @@
+---
+- name: Show running-config on AsterNOS
+  hosts: asterfusion_switches
+  gather_facts: no
+
+  tasks:
+    - name: Get running-config
+      ansible.builtin.raw: |
+        sonic-cli <<'EOF'
+        show running-config
+        EOF
+      register: rc
+
+    - name: Display running-config
+      ansible.builtin.debug:
+        msg: "{{ rc.stdout }}"
