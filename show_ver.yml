@@ -1,12 +1,12 @@
 ---
-- name: Show version from AsterNOS Switch (non-interactive)
+- name: Show version from AsterNOS Switch (handles RETURN prompt)
   hosts: asterfusion_switches
   gather_facts: no
 
   tasks:
-    - name: Show version (disable paging, add timeout)
+    - name: Show version (send RETURN to continue)
       ansible.builtin.raw: |
-        timeout 15 sh -lc "printf 'terminal length 0\nshow version\nexit\n' | sonic-cli"
+        timeout 20 sh -lc "printf '\nshow version\n\nexit\n' | sonic-cli"
       register: ver_output
       changed_when: false
       failed_when: false
@@ -14,4 +14,4 @@
 
     - name: Display show version output
       ansible.builtin.debug:
-        msg: "{{ ver_output.stdout | default('NO OUTPUT') | trim }}"
+        msg: "{{ ver_output.stdout | default('NO OUTPUT') }}"
